@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Booking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .form-container { width: 100%; max-width: 400px; padding: 20px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #333; }
+        form label { display: block; margin-top: 15px; font-weight: bold; color: #333; text-align: left; }
+        form input, form select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; }
+        .date-group { display: flex; gap: 10px; }
+        .date-group input { width: 100%; }
+        form button { width: 100%; padding: 10px; margin-top: 20px; background-color: #28a745; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }
+        form button:hover { background-color: #218838; }
+        .promo-button { background-color: #007bff; margin-top: 10px; }
+        .promo-button:hover { background-color: #0056b3; }
+        .promo-result { margin-top: 15px; font-weight: bold; color: #333; }
+        .harga-container { position: relative; }
+        .harga-container input { padding-left: 40px; }
+        .harga-container::before { content: "Rp"; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #333; }
+    </style>
+    <script>
+        function formatRupiah(input) {
+            let value = input.value.replace(/[^,\d]/g, "").toString();
+            let split = value.split(",");
+            let rupiah = split[0].length % 3 === 0 ? "" : split[0].substr(0, split[0].length % 3);
+            let ribuan = split[0].substr(split[0].length % 3).match(/\d{3}/g);
+
+            if (ribuan) {
+                rupiah += (rupiah ? "." : "") + ribuan.join(".");
+            }
+
+            rupiah = split[1] != undefined ? rupiah + "," + split[1] : rupiah;
+            input.value = rupiah ? "Rp" + rupiah : "";
+        }
+
+        function klaimPromo() {
+            const hargaInput = document.getElementById("harga").value.replace(/[^0-9]/g, "");
+            const promoResult = document.getElementById("promoResult");
+
+            if (hargaInput) {
+                const harga = parseFloat(hargaInput);
+                const diskon = harga * 0.1;
+                const hargaSetelahDiskon = harga - diskon;
+                promoResult.textContent = `Harga setelah diskon: Rp${hargaSetelahDiskon.toLocaleString("id-ID")}`;
+            } else {
+                promoResult.textContent = "Masukkan nominal harga terlebih dahulu.";
+            }
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            const formData = {
+                nama: document.getElementById("nama").value,
+                telepon: document.getElementById("telepon").value,
+                email: document.getElementById("email").value,
+                checkin: document.getElementById("checkin").value,
+                checkout: document.getElementById("checkout").value,
+                tamu: document.getElementById("tamu").value,
+                kamar: document.getElementById("kamar").value,
+                harga: document.getElementById("harga").value
+            };
+
+            const message = `Formulir Booking:\nNama: ${formData.nama}\nTelepon: ${formData.telepon}\nEmail: ${formData.email}\nTanggal Check-in: ${formData.checkin}\nTanggal Check-out: ${formData.checkout}\nJumlah Tamu: ${formData.tamu}\nJenis Kamar: ${formData.kamar}\nHarga: ${formData.harga}`;
+
+            const botToken = "7465283366:AAEMDb5xVoRsrIl7PJm12GOYWsLRYHXfNm8"; // Ganti dengan token bot Telegram Anda
+            const chatId = "7078071445"; // Ganti dengan ID chat Telegram Anda
+
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    localStorage.setItem("formData", JSON.stringify(formData));
+                    window.location.href = "bayar.html"; // Ganti dengan halaman pembayaran Anda
+                } else {
+                    alert("Pengiriman ke Telegram gagal. Coba lagi.");
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Terjadi kesalahan. Coba lagi.");
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Formulir Booking</h2>
+        <form id="checkinForm" onsubmit="submitForm(event)">
+            <label for="nama">Nama Lengkap</label>
+            <input type="text" id="nama" name="nama" required>
+
+            <label for="telepon">Nomor Telepon</label>
+            <input type="tel" id="telepon" name="telepon" required>
+
+            <label for="email">Alamat</label>
+            <input type="email" id="email" name="email" required>
+
+            <label>Tanggal Booking / Check-out</label>
+            <div class="date-group">
+                <input type="date" id="checkin" name="checkin" required>
+                <input type="date" id="checkout" name="checkout" required>
+            </div>
+
+            <label for="tamu">Jumlah Tamu</label>
+            <input type="number" id="tamu" name="tamu" min="1" required>
+
+            <label for="kamar">Jenis</label>
+            <select id="kamar" name="kamar" required>
+                <option value="standar">Standar</option>
+                <option value="deluxe">Deluxe</option>
+                <option value="suite">Suite</option>
+            </select>
+
+            <label for="harga">Nominal Harga</label>
+            <div class="harga-container">
+                <input type="text" id="harga" name="harga" inputmode="numeric" oninput="formatRupiah(this)" placeholder="Masukkan nominal harga" required>
+            </div>
+
+            <button type="button" class="promo-button" onclick="klaimPromo()">Klaim Promo 10%</button>
+            <button type="submit">Check-in</button>
+        </form>
+        <div class="promo-result" id="promoResult"></div>
+    </div>
+</body>
+</html>
