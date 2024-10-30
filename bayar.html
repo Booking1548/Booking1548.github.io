@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Pembayaran</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f2f2f2; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .payment-container { width: 100%; max-width: 400px; padding: 20px; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; text-align: center; }
+        h2 { margin-bottom: 20px; color: #333; }
+        .details { text-align: left; margin-top: 15px; color: #333; }
+        .details p { margin-bottom: 10px; }
+        .payment-method { margin-top: 20px; }
+        .payment-instruction { color: #888; font-size: 14px; margin-top: 10px; }
+        button { width: 100%; padding: 10px; margin-top: 20px; background-color: #28a745; color: #fff; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background-color 0.3s ease; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <h2>Detail Pembayaran</h2>
+        <div class="details" id="paymentDetails">
+            <!-- Data akan ditampilkan di sini -->
+        </div>
+        
+        <div class="payment-method">
+            <h3>Metode Pembayaran</h3>
+            <p>Transfer ke OVO:</p>
+            <p><strong>083141726485</strong> (a.n Maxxxo)</p>
+        </div>
+        
+        <p class="payment-instruction">Setelah pembayaran, silakan Cetak ID Booking.</p>
+        <button onclick="cetakIDBooking()">CETAK ID BOOKING</button>
+    </div>
+
+    <script>
+        // Ambil data dari localStorage
+        const formData = JSON.parse(localStorage.getItem("formData"));
+
+        if (formData) {
+            // Buat konten untuk menampilkan data
+            const paymentDetails = `
+                <p><strong>Nama Lengkap:</strong> ${formData.nama}</p>
+                <p><strong>Nomor Telepon:</strong> ${formData.telepon}</p>
+                <p><strong>Alamat:</strong> ${formData.email}</p>
+                <p><strong>Tanggal Check-in:</strong> ${formData.checkin}</p>
+                <p><strong>Tanggal Check-out:</strong> ${formData.checkout}</p>
+                <p><strong>Jumlah Tamu:</strong> ${formData.tamu}</p>
+                <p><strong>Jenis Kamar:</strong> ${formData.kamar}</p>
+                <p><strong>Nominal Harga:</strong> ${formData.harga}</p>
+            `;
+
+            // Tampilkan data di elemen dengan id paymentDetails
+            document.getElementById("paymentDetails").innerHTML = paymentDetails;
+        } else {
+            document.getElementById("paymentDetails").innerHTML = "<p>Data tidak tersedia.</p>";
+        }
+
+        function cetakIDBooking() {
+            window.location.href = "id.html";
+        }
+    </script>
+</body>
+</html>
