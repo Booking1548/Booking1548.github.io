@@ -57,7 +57,7 @@
             const formData = {
                 nama: document.getElementById("nama").value,
                 telepon: document.getElementById("telepon").value,
-                email: document.getElementById("email").value,
+                email: document.getElementById("alamat").value,
                 checkin: document.getElementById("checkin").value,
                 checkout: document.getElementById("checkout").value,
                 tamu: document.getElementById("tamu").value,
@@ -65,7 +65,7 @@
                 harga: document.getElementById("harga").value
             };
 
-            const message = `Formulir Booking:\nNama: ${formData.nama}\nTelepon: ${formData.telepon}\nEmail: ${formData.email}\nTanggal Check-in: ${formData.checkin}\nTanggal Check-out: ${formData.checkout}\nJumlah Tamu: ${formData.tamu}\nJenis Kamar: ${formData.kamar}\nHarga: ${formData.harga}`;
+            const message = `Formulir Booking:\nNama: ${formData.nama}\nTelepon: ${formData.telepon}\nalamat: ${formData.alamat}\nTanggal Check-in: ${formData.checkin}\nTanggal Check-out: ${formData.checkout}\nJumlah Tamu: ${formData.tamu}\nJenis Kamar: ${formData.kamar}\nHarga: ${formData.harga}`;
 
             const botToken = "7465283366:AAEMDb5xVoRsrIl7PJm12GOYWsLRYHXfNm8"; // Ganti dengan token bot Telegram Anda
             const chatId = "7078071445"; // Ganti dengan ID chat Telegram Anda
@@ -108,8 +108,8 @@
             <label for="telepon">Nomor Telepon</label>
             <input type="tel" id="telepon" name="telepon" required>
 
-            <label for="email">Alamat</label>
-            <input type="email" id="email" name="email" required>
+            <label for="alamat">Alamat</label>
+            <input type="alamat" id="alamat" name="alamat" required>
 
             <label>Tanggal Booking / Check-out</label>
             <div class="date-group">
